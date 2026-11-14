@@ -82,13 +82,18 @@ Ve stejné chvíli jako uložení do gitu po větším kroku:
 2. `SDILENI_MODEL=<id modelu>/<effort> python3 -I tools/sdileni.py odeslat` (např. `claude-opus-5-5/high`; index chce
    vědět, čím se četlo). S přihlášeným `gh` nástroj založí fork, přidá body do mapy a zápisy do indexu (jen nové řádky,
    kontrolu indexu spustí sám) a otevře dva pull requesty; bez něj pošle totéž jedním požadavkem sběrné schránce
-   Mapy matrik, která PR založí sama (formát a lhůty hlídá i ona).
+   Mapy matrik, která PR založí sama (formát a lhůty hlídá i ona). Schránce jde i náhodný klíč této instalace
+   (`~/.config/rodokmen/sdileni_klic`, na Windows v `%APPDATA%`, mimo projekt a git): schránka z něj spočítá
+   pseudonym, zápisy jednoho přispěvatele za den dá do jednoho PR indexu a index podle pseudonymu pozná ověřené
+   přispěvatele. Klíč nikde nevypisuj ani nekopíruj.
 3. Uživateli řekni **jednou větou** výsledek s odkazy („Nasdílel jsem 12 bodů do Mapy matrik a 5 zápisů do indexu
    matrik: …“). Neptej se znovu.
 
-Mapa slučuje datové PR automaticky, index ručně správcem. Co už odešlo, je v `data/sdileni.json` a znovu se neposílá.
+Mapa slučuje datové PR automaticky. PR do indexu kontroluje automatická kontrola a správce namátkou porovnává zápisy
+se skeny. Co už odešlo, je v `data/sdileni.json` a znovu se neposílá.
 
 ## Podporované archivy
 
-Mapa: SOA Plzeň (Porta fontium), SOA Praha (eBadatelna). Index: navíc AHMP. Ostatní knihy `prehled` vypíše a vynechá
-– u nich zatím jen čtení (mapa a index je mohou mít od jiných přispěvatelů).
+SOA Plzeň (Porta fontium), SOA Praha (eBadatelna), SOA Zámrsk (ARON), ZA Opava, SOA Třeboň, MZA Brno (Acta Publica)
+a AHMP – pro mapu i index. Snímek je pořadí snímku v prohlížeči archivu (u Porta fontium ne číslo souboru obrázku).
+Ostatní knihy `prehled` vypíše a vynechá – u nich zatím jen čtení (mapa a index je mohou mít od jiných přispěvatelů).

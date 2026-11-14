@@ -19,12 +19,26 @@ def ok(podminka, popis):
         chyby.append(popis)
 
 
-ok(sdileni.kniha_z_url("https://www.portafontium.eu/register/soap-pn/kozlany-22") == ("soa-plzen", "portafontium", "kozlany-22"), "Porta fontium")
-ok(sdileni.kniha_z_url("https://www.portafontium.eu/iipimage/30074619/kralovice-okresni-urad-10_1970-o")[2] == "kralovice-okresni-urad-10", "PF snímek")
-ok(sdileni.kniha_z_url("https://ebadatelna.soapraha.cz/pages/MatrikaPage/matrikaId/4888") == ("soa-praha", "soapraha", "4888"), "eBadatelna")
-ok(sdileni.kniha_z_url("https://ebadatelna.soapraha.cz/d/11973/15")[2] == "11973", "eBadatelna /d/")
-ok(sdileni.kniha_z_url("https://katalog.ahmp.cz/pragapublica/permalink?xid=144286C6CCB648968F0C7879316827D0") == (None, "ahmp", "144286c6"), "AHMP")
-ok(sdileni.kniha_z_url("https://aron.vychodoceskearchivy.cz/apu/abc") is None, "ARON zatím ne")
+K = sdileni.Kniha
+ok(sdileni.kniha_z_url("https://www.portafontium.eu/register/soap-pn/kozlany-22") == K("soa-plzen", "kozlany-22", "portafontium", "kozlany-22"), "Porta fontium")
+ok(sdileni.kniha_z_url("https://www.portafontium.eu/iipimage/30074619/kralovice-okresni-urad-10_1970-o").pid == "kralovice-okresni-urad-10", "PF snímek")
+ok(sdileni.kniha_z_url("https://ebadatelna.soapraha.cz/pages/MatrikaPage/matrikaId/4888") == K("soa-praha", "4888", "soapraha", "4888"), "eBadatelna")
+ok(sdileni.kniha_z_url("https://ebadatelna.soapraha.cz/d/11973/15").kniha == "11973", "eBadatelna /d/")
+ok(sdileni.kniha_z_url("https://katalog.ahmp.cz/pragapublica/permalink?xid=144286C6CCB648968F0C7879316827D0") == K("ahmp", "144286C6CCB648968F0C7879316827D0", "ahmp", "144286c6"), "AHMP")
+ok(sdileni.kniha_z_url("https://aron.vychodoceskearchivy.cz/apu/0042C435-fb11-4c74-88c1-b3cf903e16a9") == K("soa-zamrsk", "0042c435-fb11-4c74-88c1-b3cf903e16a9", "vca", "0042c435"), "ARON")
+ok(sdileni.kniha_z_url("https://aron.vychodoceskearchivy.cz/apu/abc") is None, "ARON bez platného uuid")
+ok(sdileni.kniha_z_url("https://digi.archives.cz/da/permalink?xid=be926b90-f13c-102f-8255-0050568c0263") == K("za-opava", "be926b90-f13c-102f-8255-0050568c0263", "zaopava", "be926b90"), "ZA Opava")
+ok(sdileni.kniha_z_url("https://digi.ceskearchivy.cz/10374") == K("soa-trebon", "10374", "soatrebon", "10374"), "SOA Třeboň")
+ok(sdileni.kniha_z_url("https://digi.ceskearchivy.cz/DA?lang=cs&menu=3&id=10374&page=5").pid == "10374", "SOA Třeboň, prohlížeč")
+ok(sdileni.kniha_z_url("https://www.mza.cz/actapublica/matrika/detail/10034") == K("mza-brno", "10034", "mza", "10034"), "MZA")
+ok(sdileni.index_z_mapy("soa-zamrsk", "0042c435-fb11-4c74-88c1-b3cf903e16a9") == "vca/0042c435", "mapa → index ARON")
+ok(sdileni.index_z_mapy("soa-plzen", "kozlany-22") == "portafontium/kozlany-22", "mapa → index PF")
+ok(sdileni.index_z_mapy("soa-litomerice", "x") is None, "mapa → index: archiv bez indexu")
+
+os.environ["APPDATA"] = tempfile.mkdtemp(prefix="sdileni_klic_")
+k1 = sdileni.klic_prispevatele()
+ok(len(k1) >= 32 and k1 == sdileni.klic_prispevatele(), "klíč přispěvatele: vznikne jednou a drží se")
+ok(os.path.exists(os.path.join(os.environ["APPDATA"], "rodokmen", "sdileni_klic")), "klíč mimo projekt")
 
 body = [{"scan": 10, "year": 1800}, {"scan": 30, "year": 1810}, {"scan": 40, "year": 1812, "year_to": 1813}]
 ok(sdileni.odhad(body, 1805) == (20, "odhad mezi sn. 10 (1800) a 30 (1810)"), "interpolace")
